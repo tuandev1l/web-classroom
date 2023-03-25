@@ -1,0 +1,47 @@
+/* RESET CSS */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-size: 1.6rem;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.wrapper {
+  text-align: center;
+}
+
+.heading {
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 3.2rem;
+}
+
+.description {
+  margin: 12px 0;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: 600;
+  font-size: 2.4rem;
+}
+
+.colorInput {
+  margin: 12px 0;
+}
