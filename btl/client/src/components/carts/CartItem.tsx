@@ -69,10 +69,13 @@ const CartItem = ({ bookId, title, idx, money, number }: Props) => {
       quantity,
       title,
     };
-    const timer = setTimeout(() => {
-      if (quantity !== number) updateMutation(item);
-    }, 1000);
-    return () => clearTimeout(timer);
+    if (quantity !== number) {
+      updateItem(item);
+      const timer = setTimeout(() => {
+        updateMutation(item);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
   }, [quantity]);
 
   return (

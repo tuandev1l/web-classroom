@@ -11,17 +11,21 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 @Slf4j
-public class IdValidatorAspect {
+public class ValidIdAspect {
+  public void throwException(ValidId validId) {
+    throw new InvalidException(validId.message());
+  }
+
   @Around("@annotation(ValidId)")
   public Object idValidator(ProceedingJoinPoint joinPoint) throws Throwable {
+    ValidId validId =
+        ((MethodSignature) joinPoint.getSignature()).getMethod().getAnnotation(ValidId.class);
     try {
-      log.warn("What??");
       long id = Long.parseLong(joinPoint.getArgs()[0].toString());
       if (id > 0) return joinPoint.proceed();
+      else throwException(validId);
     } catch (Exception e) {
-      ValidId validId =
-          ((MethodSignature) joinPoint.getSignature()).getMethod().getAnnotation(ValidId.class);
-      throw new InvalidException(validId.message());
+      throwException(validId);
     }
     return joinPoint.proceed();
   }

@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect } from 'react';
+import { createContext, useState } from 'react';
 import { IAddToCart } from '../types';
 
 export const AppContext = createContext<IObject>({
@@ -51,6 +51,7 @@ const Provider: React.FC<Props> = ({ children }) => {
     const existedItem = items.filter((item) => item.bookId === bookId)[0];
     if (existedItem) {
       existedItem.quantity = quantity;
+      setItems([...items]);
     }
   };
 

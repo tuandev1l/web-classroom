@@ -1,15 +1,15 @@
 package com.btl.demo.exception;
 
-public class NotFoundException extends RuntimeException {
-  public NotFoundException(String message) {
+public class DuplicatedException extends RuntimeException {
+  public DuplicatedException(String message) {
     super(message);
   }
 
-  public NotFoundException(String message, Throwable cause) {
+  public DuplicatedException(String message, Throwable cause) {
     super(message, cause);
   }
 
-  public NotFoundException(Throwable cause) {
+  public DuplicatedException(Throwable cause) {
     super(cause);
   }
 }

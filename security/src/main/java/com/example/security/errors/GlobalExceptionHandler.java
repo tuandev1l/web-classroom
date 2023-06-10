@@ -1,4 +1,4 @@
-package exam.practice.errorCatching;
+package com.example.security.errors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,15 +17,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
   }
 
   @ExceptionHandler
-  public ResponseEntity<Error> handleExistPhoneException(PhoneExistException exc) {
+  public ResponseEntity<Error> handleMalformJwtException(JWTException exc) {
     Error error = new Error(HttpStatus.BAD_REQUEST.value(),
         exc.getMessage());
-    return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-  }
-
-  @ExceptionHandler
-  public ResponseEntity<Error> handleNotIntegerException(NotIntegerException exc) {
-    Error error = new Error(HttpStatus.BAD_REQUEST.value(), exc.getMessage());
     return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
   }
 

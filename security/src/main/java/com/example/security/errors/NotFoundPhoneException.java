@@ -1,4 +1,4 @@
-package exam.practice.errorCatching;
+package com.example.security.errors;
 
 public class NotFoundPhoneException extends RuntimeException {
   public NotFoundPhoneException(String message) {

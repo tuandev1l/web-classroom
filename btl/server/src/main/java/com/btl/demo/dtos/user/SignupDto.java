@@ -13,15 +13,19 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class LoginDto {
+public class SignupDto {
   @NotNull(message = "Name must not be null")
   @Size(min = 2, max = 20, message = "Name must at least 2 characters")
   private String name;
 
   @NotNull(message = "Email must not be null")
-  @Size(min = 2, max = 20, message = "Name must at least 2 characters")
+  @Size(min = 2, max = 20, message = "Email must at least 2 characters")
   @Email
   private String email;
+
+  @NotNull(message = "Address must not be null")
+  @Size(min = 2, max = 20, message = "Address must at least 2 characters")
+  private String address;
 
   @NotNull(message = "Password must not be null")
   @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",

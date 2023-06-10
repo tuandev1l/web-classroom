@@ -14,14 +14,18 @@ import CartItem from './CartItem';
 
 type Props = {};
 
+const calculateTotalMoney = (items: IAddToCart[]) =>
+  items.reduce(
+    (sum: number, el: IAddToCart) => (sum += el.money * el.quantity),
+    0
+  );
+
 const Cart = ({}: Props) => {
   const { addMutipleItems, items } = useContext(AppContext);
-  const [totalMoney, setTotalMoney] = useState(
-    items.reduce((sum: number, el: IAddToCart) => (sum += el.money), 0)
-  );
   const toast = useToast;
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
+  let totalMoney = calculateTotalMoney(items);
 
   const showModalHandler = () => {
     setShow(true);
@@ -30,6 +34,10 @@ const Cart = ({}: Props) => {
   const handleCloseModal = () => {
     setShow(false);
   };
+
+  useEffect(() => {
+    totalMoney = calculateTotalMoney(items);
+  }, [items]);
 
   useQuery({
     queryKey: ['cart'],
@@ -54,12 +62,6 @@ const Cart = ({}: Props) => {
       navigate('/orders');
     },
   });
-
-  useEffect(() => {
-    setTotalMoney(
-      items.reduce((sum: number, el: IAddToCart) => (sum += el.money), 0)
-    );
-  }, [items]);
 
   const purchaseHandler = () => {
     mutate();

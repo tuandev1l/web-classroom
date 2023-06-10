@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class SignupDto {
+public class LoginDto {
   @NotNull(message = "Email must not be null")
   @Size(min = 2, max = 20, message = "")
   @Email

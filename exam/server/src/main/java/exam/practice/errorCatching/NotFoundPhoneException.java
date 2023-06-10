@@ -1,15 +1,15 @@
-package com.pojo.crudpojo.errorCatching;
+package exam.practice.errorCatching;
 
-public class NotFoundStudentException extends RuntimeException {
-  public NotFoundStudentException(String message) {
+public class NotFoundPhoneException extends RuntimeException {
+  public NotFoundPhoneException(String message) {
     super(message);
   }
 
-  public NotFoundStudentException(String message, Throwable cause) {
+  public NotFoundPhoneException(String message, Throwable cause) {
     super(message, cause);
   }
 
-  public NotFoundStudentException(Throwable cause) {
+  public NotFoundPhoneException(Throwable cause) {
     super(cause);
   }
 }

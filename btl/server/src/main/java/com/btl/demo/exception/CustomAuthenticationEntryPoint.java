@@ -10,13 +10,13 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 
 import java.io.IOException;
 
-public class AccessDenied implements AuthenticationEntryPoint {
+public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
   @Override
   public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-    ErrorResponse errorResponse = new ErrorResponse("fail", "Token has been " +
-        "expired or you do not login");
+    ErrorResponse errorResponse = new ErrorResponse("fail", "Invalid token or" +
+        " you do not login, please login again");
     String message = new Gson().toJson(errorResponse);
-    response.setStatus(HttpStatus.UNAUTHORIZED.value());
+    response.setStatus(HttpStatus.BAD_REQUEST.value());
     response.setContentType("application/json");
     response.getWriter().write(message);
   }

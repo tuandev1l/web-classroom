@@ -72,9 +72,7 @@ public class JwtService {
 
   private Key getSignInKey() {
     byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
-    var key = Keys.hmacShaKeyFor(keyBytes);
-    log.warn(key.toString());
-    return key;
+    return Keys.hmacShaKeyFor(keyBytes);
   }
 
 }

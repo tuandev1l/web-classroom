@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { AxiosError, AxiosResponse } from 'axios';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -17,7 +17,6 @@ const LIMIT = 10;
 const Books = ({}: Props) => {
   const [books, setBooks] = useState<IBook[]>([bookDefault]);
   const toast = useToast;
-  const queryClient = useQueryClient();
   const isAdmin = localStorage.getItem('role') === Role.ADMIN;
   const [page, setPage] = useState(1);
   const [numberOfPage, setNumberOfPage] = useState(0);
@@ -49,7 +48,6 @@ const Books = ({}: Props) => {
     mutationFn: (id: string | number) => deleteBook(id),
     onSuccess() {
       toast({ type: 'success', message: 'Delete book successfully' });
-      queryClient.invalidateQueries(['books']);
     },
     onError(err: AxiosError) {
       toast({

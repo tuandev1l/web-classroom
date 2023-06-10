@@ -1,7 +1,7 @@
 package com.btl.demo.exception;
 
-public class JWTException extends RuntimeException {
-  public JWTException(String message) {
+public class PermissionException extends RuntimeException {
+  public PermissionException(String message) {
     super(message);
   }
 }

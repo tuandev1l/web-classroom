@@ -1,2 +1,8 @@
-package com.btl.demo.dtos.order;public class OrderDto {
+package com.btl.demo.dtos.order;
+
+import lombok.Data;
+
+@Data
+public class OrderDto {
+  private String status;
 }

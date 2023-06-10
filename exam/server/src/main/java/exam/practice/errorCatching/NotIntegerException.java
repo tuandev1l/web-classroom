@@ -1,4 +1,4 @@
-package com.pojo.crudpojo.errorCatching;
+package exam.practice.errorCatching;
 
 public class NotIntegerException extends RuntimeException {
   public NotIntegerException(String message) {

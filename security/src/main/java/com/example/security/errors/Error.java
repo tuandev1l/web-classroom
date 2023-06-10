@@ -1,4 +1,4 @@
-package exam.practice.errorCatching;
+package com.example.security.errors;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

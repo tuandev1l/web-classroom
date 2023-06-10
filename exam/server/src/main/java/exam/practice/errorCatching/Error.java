@@ -1,4 +1,4 @@
-package com.pojo.crudpojo.errorCatching;
+package exam.practice.errorCatching;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

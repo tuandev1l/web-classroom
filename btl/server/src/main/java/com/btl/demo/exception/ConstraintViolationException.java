@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Violation {
+public class ConstraintViolationException {
   private String fieldName;
   private String message;
 }

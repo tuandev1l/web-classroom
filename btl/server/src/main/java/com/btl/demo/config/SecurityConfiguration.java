@@ -1,6 +1,6 @@
 package com.btl.demo.config;
 
-import com.example.security.user.Role;
+import com.btl.demo.exception.CustomAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,34 +13,32 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.logout.LogoutFilter;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@SuppressWarnings("removal")
 public class SecurityConfiguration {
   private final JwtAuthenticationFilter jwtAuthFilter;
   private final AuthenticationProvider authenticationProvider;
-  private final CatchExceptionFilter catchExceptionFilter;
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    http.cors(cors -> cors.configure(http));
+    http.cors();
     http
-        // disable csrf
         .csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/auth/**").permitAll()
-            .requestMatchers("/admin/**").hasAuthority(Role.ADMIN.name())
-            .requestMatchers("/demo/**").hasAuthority(Role.USER.name())
             .anyRequest().authenticated()
         );
+
     // new session for each request
     http
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authenticationProvider(authenticationProvider)
-        .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-    http.addFilterBefore(catchExceptionFilter, LogoutFilter.class);
+        .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+        .exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint());
+    //    http.addFilterBefore(catchExceptionFilter, LogoutFilter.class);
     return http.build();
   }
 
@@ -49,4 +47,5 @@ public class SecurityConfiguration {
     return http.getSharedObject(AuthenticationManagerBuilder.class)
         .build();
   }
+
 }

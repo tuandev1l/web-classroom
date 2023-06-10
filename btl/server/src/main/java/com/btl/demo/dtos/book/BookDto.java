@@ -1,4 +1,4 @@
-package com.btl.demo.dtos;
+package com.btl.demo.dtos.book;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
@@ -27,6 +27,14 @@ public class BookDto {
   @Size(min = 2, max = 50, message = "Author at least 2 characters and at most " +
       "50 characters")
   private String author;
+
+  @NotNull(message = "Description must not be null")
+  @Size(min = 2, message = "Author at least 2 characters and at most " +
+      "50 characters")
+  private String description;
+
+  @NotNull(message = "Image must not be null")
+  private String image;
 
   @NotNull(message = "Published must not be null")
   @PastOrPresent(message = "Published book must be in the past or present")

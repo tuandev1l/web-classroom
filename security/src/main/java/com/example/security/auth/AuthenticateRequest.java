@@ -1,2 +1,14 @@
-package com.example.security.auth;public class AuthenticateRequest {
+package com.example.security.auth;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class AuthenticateRequest {
+  private String email, password;
 }

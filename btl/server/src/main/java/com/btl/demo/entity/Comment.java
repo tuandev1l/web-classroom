@@ -2,21 +2,23 @@ package com.btl.demo.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "orders")
-public class Order {
+@Entity
+public class Comment {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long id;
+  private Long id;
 
   private String message;
 
-  private float rate;
+  private double rate;
 
   @ManyToOne
   @JoinColumn(name = "user_id")
@@ -24,8 +26,16 @@ public class Order {
   @ToString.Exclude
   private User user;
 
-  @OneToMany(mappedBy = "order")
+  @ManyToOne
+  @JoinColumn(name = "book_id")
   @EqualsAndHashCode.Exclude
   @ToString.Exclude
-  private List<Book> book;
+  private Book book;
+  
+
+  @CreationTimestamp
+  private LocalDateTime createdAt;
+
+  @UpdateTimestamp
+  private LocalDateTime updatedAt;
 }

@@ -1,4 +1,4 @@
-package com.pojo.crudpojo.errorCatching;
+package exam.practice.errorCatching;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,9 +10,17 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
   @ExceptionHandler
-  public ResponseEntity<Error> handleNotFoundException(NotFoundStudentException exc) {
-    Error error = new Error(HttpStatus.NOT_FOUND.value(), exc.getMessage());
+  public ResponseEntity<Error> handleNotFoundException(NotFoundPhoneException exc) {
+    Error error = new Error(HttpStatus.NOT_FOUND.value(),
+        exc.getMessage());
     return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+  }
+
+  @ExceptionHandler
+  public ResponseEntity<Error> handleExistPhoneException(PhoneExistException exc) {
+    Error error = new Error(HttpStatus.BAD_REQUEST.value(),
+        exc.getMessage());
+    return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler
