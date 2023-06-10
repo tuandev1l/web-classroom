@@ -1,0 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.Toastify__toast-body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
