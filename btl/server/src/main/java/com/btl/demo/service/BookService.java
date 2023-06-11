@@ -35,6 +35,14 @@ public class BookService {
   }
 
   public Book createBook(BookDto bookDto) {
+    //    List<Book> books =
+    //        this.bookRepository.findBookWithTitleAndAuthor(bookDto.getTitle(),
+    //            bookDto.getAuthor());
+    //
+    //    if (books.size() > 0) {
+    //      throw new InvalidException("This book has been existed");
+    //    }
+
     BookType type = typeService.getBookType(bookDto.getType());
 
     Book book = new Book();
