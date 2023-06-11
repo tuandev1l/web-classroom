@@ -1,16 +1,16 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { AxiosResponse } from 'axios';
 import { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { createOrder, getAllItemsFromCart } from '../../apis';
+import { getAllItemsFromCart, getClientSecret } from '../../apis';
 import { ButtonType } from '../../enums';
-import useToast from '../../hooks/useToast';
 import { AppContext } from '../../stores/Provider';
 import { IAddToCart, ICart } from '../../types';
 import Button from '../common/Button';
 import Confirm from '../common/Confirm';
 import Layout from '../common/Layout';
 import CartItem from './CartItem';
+import useToast from '../../hooks/useToast';
 
 type Props = {};
 
@@ -20,12 +20,15 @@ const calculateTotalMoney = (items: IAddToCart[]) =>
     0
   );
 
+let amount: number, description: string;
+
 const Cart = ({}: Props) => {
   const { addMutipleItems, items } = useContext(AppContext);
-  const toast = useToast;
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
   let totalMoney = calculateTotalMoney(items);
+  const [enabled, setEnable] = useState(false);
+  const toast = useToast;
 
   const showModalHandler = () => {
     setShow(true);
@@ -55,16 +58,25 @@ const Cart = ({}: Props) => {
     },
   });
 
-  const { mutate } = useMutation({
-    mutationFn: createOrder,
-    onSuccess() {
-      toast({ type: 'success', message: 'Create order successfully!' });
-      navigate('/orders');
+  useQuery({
+    queryKey: ['clientSecret'],
+    queryFn: () => getClientSecret({ amount, description }),
+    onSuccess(data) {
+      localStorage.setItem('clientSecret', data.data['clientSecret']);
+      navigate('/stripe');
     },
+    onError() {
+      toast({ type: 'error', message: 'Can not create client Secret' });
+    },
+    enabled,
   });
 
   const purchaseHandler = () => {
-    mutate();
+    amount = totalMoney;
+    description = `${localStorage.getItem(
+      'name'
+    )} - ${new Date().toISOString()}`;
+    setEnable(true);
   };
 
   return (

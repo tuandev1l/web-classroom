@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AxiosError, AxiosResponse } from 'axios';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -20,6 +20,7 @@ const Books = ({}: Props) => {
   const isAdmin = localStorage.getItem('role') === Role.ADMIN;
   const [page, setPage] = useState(1);
   const [numberOfPage, setNumberOfPage] = useState(0);
+  const queryClient = useQueryClient();
 
   useQuery({
     queryKey: ['books', page],
@@ -48,11 +49,14 @@ const Books = ({}: Props) => {
     mutationFn: (id: string | number) => deleteBook(id),
     onSuccess() {
       toast({ type: 'success', message: 'Delete book successfully' });
+      queryClient.invalidateQueries({ queryKey: ['books', page] });
     },
     onError(err: AxiosError) {
       toast({
         type: 'error',
-        message: (err.response as IErrorReponse).data.message,
+        message:
+          (err.response as IErrorReponse).data.message ||
+          'Cannot load books, please try again',
       });
     },
   });

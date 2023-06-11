@@ -3,7 +3,8 @@ import { useContext, useState } from 'react';
 import { addItemToCart } from '../../apis';
 import useToast from '../../hooks/useToast';
 import { AppContext } from '../../stores/Provider';
-import { IAddToCart, IBook } from '../../types';
+import { IAddToCart, IBook, IErrorReponse } from '../../types';
+import { AxiosError } from 'axios';
 
 type Props = {
   money: number;
@@ -21,6 +22,14 @@ const AddToCart = ({ money, book, title }: Props) => {
     onSuccess(_, item) {
       toast({ message: 'Add item to cart', type: 'success' });
       addNewItem(item);
+    },
+    onError(error: AxiosError) {
+      toast({
+        type: 'error',
+        message:
+          (error.response as IErrorReponse).data.message ||
+          'Can not add item to cart, please try again',
+      });
     },
   });
 

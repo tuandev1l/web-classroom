@@ -1,18 +1,17 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { AxiosError, AxiosResponse } from 'axios';
-import { useState } from 'react';
+import axios, { AxiosError, AxiosResponse } from 'axios';
+import React, { useEffect, useState } from 'react';
 import { useMatch, useNavigate, useParams } from 'react-router-dom';
 import { createBook, getBook, getBookType, updateBook } from '../../apis';
-import { IBook, IBookType, IErrorReponse } from '../../types';
-import Header from '../common/Header';
-import Required from '../common/Required';
-import { bookDefault, bookTypeDefault, convertDate } from '../../utils';
-import Button from '../common/Button';
-import useToast from '../../hooks/useToast';
 import { ButtonType, Role } from '../../enums';
-import Comments from '../comments/Comments';
+import useToast from '../../hooks/useToast';
+import { IBook, IBookType, IErrorReponse } from '../../types';
+import { bookDefault, bookTypeDefault, convertDate } from '../../utils';
 import AddToCart from '../carts/AddToCart';
+import Comments from '../comments/Comments';
+import Button from '../common/Button';
 import Layout from '../common/Layout';
+import Required from '../common/Required';
 
 type Props = {};
 
@@ -25,6 +24,23 @@ const BookDetail = ({}: Props) => {
   const navigate = useNavigate();
   const params = useParams();
   const isAdmin = localStorage.getItem('role') === Role.ADMIN;
+  const id = params.id!;
+  const [selectedFile, setSelectedFile] = useState<File>();
+  const [preview, setPreview] = useState('');
+
+  const bookCoverHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedFile(e.target.files?.[0]);
+  };
+
+  useEffect(() => {
+    if (!selectedFile) {
+      return;
+    }
+    const url = URL.createObjectURL(selectedFile);
+    setPreview(url);
+
+    return () => URL.revokeObjectURL(url!);
+  }, [selectedFile]);
 
   useQuery({
     queryKey: ['bookTypes'],
@@ -40,6 +56,14 @@ const BookDetail = ({}: Props) => {
       toast({ type: 'success', message: 'Create book successfully' });
       navigate('/books');
     },
+    onError(error: AxiosError) {
+      toast({
+        type: 'error',
+        message:
+          (error.response as IErrorReponse).data.message ||
+          'Can not create book, please try again',
+      });
+    },
   });
 
   const updateBookMutation = useMutation({
@@ -51,7 +75,9 @@ const BookDetail = ({}: Props) => {
     onError(error: AxiosError) {
       toast({
         type: 'error',
-        message: (error.config as IErrorReponse).data.message,
+        message:
+          (error.response as IErrorReponse).data.message ||
+          'Can not update this book, please try again',
       });
     },
   });
@@ -85,13 +111,28 @@ const BookDetail = ({}: Props) => {
       toast({ type: 'error', message: 'Pages must be above 0' });
       isValid = false;
     }
+    if (isAddMode && !selectedFile) {
+      toast({ type: 'error', message: 'Book must have cover' });
+      isValid = false;
+    }
     return isValid;
   };
 
-  const submitFormHandler = () => {
+  const submitFormHandler = async () => {
     if (!isValidateBook()) return;
 
     if (isAddMode) {
+      if (!book.image) {
+        const formData = new FormData();
+        formData.append('file', selectedFile!);
+        formData.append('upload_preset', 'qivjqog9');
+
+        const data = await axios.post(
+          'https://api.cloudinary.com/v1_1/dfa7qyx7z/upload',
+          formData
+        );
+        handleChange('image', data.data.url);
+      }
       return createBookMutation.mutate(book);
     } else if (isViewMode) {
       return setIsViewMode(false);
@@ -99,23 +140,21 @@ const BookDetail = ({}: Props) => {
     updateBookMutation.mutate(book);
   };
 
-  if (!isAddMode) {
-    const id = params.id!;
-
-    useQuery({
-      queryKey: ['books', id],
-      queryFn: () => getBook(id),
-      onSuccess(data: AxiosResponse) {
-        setBook(data.data);
-      },
-      onError(err: AxiosError) {
-        toast({
-          type: 'error',
-          message: (err.response as IErrorReponse).data.message,
-        });
-      },
-    });
-  }
+  useQuery({
+    queryKey: ['books', id],
+    queryFn: () => getBook(id),
+    onSuccess(data: AxiosResponse) {
+      setBook(data.data);
+      console.log(data.data);
+    },
+    onError(err: AxiosError) {
+      toast({
+        type: 'error',
+        message: (err.response as IErrorReponse).data.message,
+      });
+    },
+    enabled: !isAddMode,
+  });
 
   return (
     <Layout>
@@ -170,6 +209,7 @@ const BookDetail = ({}: Props) => {
                 <input
                   type='date'
                   className='mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400 focus:outline-none :border-sky-500 focus:ring-1 focus:ring-sky-500 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none'
+                  max={new Date().toISOString().split('T')[0]}
                   required
                   value={convertDate(book.published)}
                   onChange={(e) => handleChange('published', e.target.value)}
@@ -258,10 +298,11 @@ const BookDetail = ({}: Props) => {
             <input
               type='file'
               className='file-input file-input-bordered file-input-info w-full max-w-xs'
+              onChange={bookCoverHandler}
             />
           )}
-          <div className='flex mt-4'>
-            <img src='https://upload.wikimedia.org/wikipedia/vi/3/3d/T%C3%B4i_th%E1%BA%A5y_hoa_v%C3%A0ng_tr%C3%AAn_c%E1%BB%8F_xanh.jpg' />
+          <div className='flex mt-4 h-96 '>
+            <img src={preview || book.image} />
           </div>
         </div>
       </div>

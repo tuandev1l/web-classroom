@@ -16,6 +16,7 @@ export const initBook: IBook = {
   money: 0,
   createdAt: null,
   updatedAt: null,
+  image: '',
 };
 
 export const signupDefault: ISignup = {
@@ -23,6 +24,7 @@ export const signupDefault: ISignup = {
   email: '',
   password: '',
   passwordConfirm: '',
+  address: '',
 };
 
 export const loginDefault: ILogin = {
@@ -41,6 +43,7 @@ export const userDefault: IUser = {
   role: '',
   name: '',
   email: '',
+  address: '',
   createdAt: null,
   updatedAt: null,
 };
@@ -56,6 +59,8 @@ export const cartDefault: ICart = {
       quantity: 0,
       createdAt: null,
       updatedAt: null,
+      isCommented: false,
+      comment: null,
     },
   ],
   createdAt: null,

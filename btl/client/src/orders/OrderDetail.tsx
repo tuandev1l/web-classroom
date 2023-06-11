@@ -1,16 +1,16 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import classNames from 'classnames';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { cancelOrder, getOrderById, updateStatusOrder } from '../apis';
 import Button from '../components/common/Button';
-import Header from '../components/common/Header';
 import Layout from '../components/common/Layout';
 import { ButtonType, OrderStatus, Role } from '../enums';
 import useToast from '../hooks/useToast';
-import { IOrder, IStatusSend } from '../types';
+import { IErrorReponse, IOrder, IStatusSend } from '../types';
 import { convertDate } from '../utils';
 import ItemDetail from './ItemDetail';
-import classNames from 'classnames';
+import { AxiosError } from 'axios';
 
 type Props = {};
 
@@ -70,6 +70,14 @@ const OrderDetail = ({}: Props) => {
     onSuccess() {
       toast({ type: 'success', message: 'Cancel order successfully' });
     },
+    onError(error: AxiosError) {
+      toast({
+        type: 'error',
+        message:
+          (error.response as IErrorReponse).data.message ||
+          'Can not cancel this order, please try again',
+      });
+    },
   });
 
   const { mutate: updateStatusMutate } = useMutation({
@@ -78,6 +86,14 @@ const OrderDetail = ({}: Props) => {
     onSuccess() {
       toast({ type: 'success', message: 'Update order status successfully' });
       queryClient.invalidateQueries(['orders', id]);
+    },
+    onError(error: AxiosError) {
+      toast({
+        type: 'error',
+        message:
+          (error.response as IErrorReponse).data.message ||
+          'Can not update status this order, please try again',
+      });
     },
   });
 
@@ -123,15 +139,17 @@ const OrderDetail = ({}: Props) => {
                 <th>Address</th>
                 <th>Type of purchase</th>
                 <th>Created at</th>
+                <th>Expect Delivered</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td>{order?.user.name}</td>
                 <td>{order?.user.email}</td>
-                <td>{'Hard Code'}</td>
+                <td>{order?.user.address}</td>
                 <td>{'Credit card'}</td>
                 <td>{convertDate(order?.createdAt || null)}</td>
+                <td>{convertDate(order?.expectDelivered || null)}</td>
               </tr>
             </tbody>
           </table>
@@ -165,6 +183,7 @@ const OrderDetail = ({}: Props) => {
                   bookId={item.book.id}
                   orderId={id!}
                   comment={item.comment}
+                  image={item.book.image}
                 />
               ))}
             </tbody>

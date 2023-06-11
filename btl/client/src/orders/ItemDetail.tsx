@@ -5,7 +5,8 @@ import CreateComment from '../components/comments/CommentDetails';
 import Button from '../components/common/Button';
 import { ButtonType } from '../enums';
 import useToast from '../hooks/useToast';
-import { IComment, ICommentSend } from '../types';
+import { IComment, ICommentSend, IErrorReponse } from '../types';
+import { AxiosError } from 'axios';
 
 type Props = {
   idx: number;
@@ -20,6 +21,7 @@ type Props = {
   bookId: number;
   orderId: string;
   comment: IComment | null;
+  image: string;
 };
 
 export interface IRating {
@@ -41,6 +43,7 @@ const ItemDetail = ({
   bookId,
   orderId,
   comment,
+  image,
 }: Props) => {
   const [show, setShow] = useState(false);
   const [commented, setCommented] = useState(isCommented);
@@ -62,6 +65,14 @@ const ItemDetail = ({
       handleCloseModal();
       setCommented(true);
     },
+    onError(error: AxiosError) {
+      toast({
+        type: 'error',
+        message:
+          (error.response as IErrorReponse).data.message ||
+          'Can not create comment, please try again',
+      });
+    },
   });
 
   const { mutate: updateCommentMutate } = useMutation({
@@ -71,6 +82,14 @@ const ItemDetail = ({
       toast({ type: 'success', message: 'Update Rating sucessfully' });
       handleCloseModal();
       setCommented(true);
+    },
+    onError(error: AxiosError) {
+      toast({
+        type: 'error',
+        message:
+          (error.response as IErrorReponse).data.message ||
+          'Can not update this item, please try again',
+      });
     },
   });
 
@@ -106,9 +125,7 @@ const ItemDetail = ({
       <CreateComment
         handleCloseModal={handleCloseModal}
         show={show}
-        imgUrl={
-          'https://upload.wikimedia.org/wikipedia/vi/3/3d/T%C3%B4i_th%E1%BA%A5y_hoa_v%C3%A0ng_tr%C3%AAn_c%E1%BB%8F_xanh.jpg'
-        }
+        imgUrl={image}
         title={title}
         type={type}
         money={money}

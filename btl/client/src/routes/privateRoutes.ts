@@ -1,6 +1,8 @@
 import Book from '../components/books/BookDetail';
 import BookTable from '../components/books/Books';
 import Cart from '../components/carts/Cart';
+import Stripe from '../components/purchase/Stripe';
+import Success from '../components/purchase/Success';
 import OrderDetail from '../orders/OrderDetail';
 import Orders from '../orders/Orders';
 
@@ -24,6 +26,14 @@ const privateRoutes = [
   {
     path: '/orders/:id',
     element: OrderDetail,
+  },
+  {
+    path: '/stripe',
+    element: Stripe,
+  },
+  {
+    path: '/success',
+    element: Success,
   },
 ];
 

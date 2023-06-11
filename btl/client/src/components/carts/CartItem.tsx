@@ -3,10 +3,11 @@ import { useContext, useEffect, useState } from 'react';
 import { deleteItemFromCart, updateItemFromCart } from '../../apis';
 import useToast from '../../hooks/useToast';
 import { AppContext } from '../../stores/Provider';
-import { IAddToCart } from '../../types';
+import { IAddToCart, IErrorReponse } from '../../types';
 import Button from '../common/Button';
 import { ButtonType } from '../../enums';
 import Confirm from '../common/Confirm';
+import { AxiosError } from 'axios';
 
 type Props = {
   bookId: number;
@@ -36,6 +37,14 @@ const CartItem = ({ bookId, title, idx, money, number }: Props) => {
       toast({ type: 'success', message: 'Delete item successfully' });
       removeItem(bookId);
     },
+    onError(error: AxiosError) {
+      toast({
+        type: 'error',
+        message:
+          (error.response as IErrorReponse).data.message ||
+          'Can not delete this item, please try again',
+      });
+    },
   });
 
   const { mutate: updateMutation } = useMutation({
@@ -43,6 +52,14 @@ const CartItem = ({ bookId, title, idx, money, number }: Props) => {
     onSuccess(_, item) {
       toast({ type: 'success', message: 'Update item successfully' });
       updateItem(item);
+    },
+    onError(error: AxiosError) {
+      toast({
+        type: 'error',
+        message:
+          (error.response as IErrorReponse).data.message ||
+          'Can not update item to cart, please try again',
+      });
     },
   });
 
@@ -69,13 +86,16 @@ const CartItem = ({ bookId, title, idx, money, number }: Props) => {
       quantity,
       title,
     };
-    if (quantity !== number) {
-      updateItem(item);
-      const timer = setTimeout(() => {
-        updateMutation(item);
-      }, 1000);
-      return () => clearTimeout(timer);
+    if (quantity === number) {
+      return;
     }
+
+    const timer = setTimeout(() => {
+      updateMutation(item);
+    }, 1000);
+    return () => {
+      clearTimeout(timer);
+    };
   }, [quantity]);
 
   return (

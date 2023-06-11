@@ -6,6 +6,7 @@ import {
   ILogin,
   ISignup,
   IStatusSend,
+  IStripe,
 } from '../types';
 import { instance } from './../utils/axiosConfig';
 
@@ -66,3 +67,5 @@ export const updateComment = (
 
 export const updateStatusOrder = (id: string, status: IStatusSend) =>
   instance.patch(`orders/${id}`, status);
+
+export const getClientSecret = (data: IStripe) => instance.post('stripe', data);

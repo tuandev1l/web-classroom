@@ -22,6 +22,7 @@ export const bookDefault: IBook = {
   money: 0,
   createdAt: null,
   updatedAt: null,
+  image: '',
 };
 
 export const bookTypeDefault: IBookType = {

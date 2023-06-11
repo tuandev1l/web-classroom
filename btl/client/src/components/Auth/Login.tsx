@@ -47,9 +47,12 @@ const Login = ({}: Props) => {
       handleLoggedIn();
     },
     onError(error: AxiosError) {
+      console.log(error);
       toast({
         type: 'error',
-        message: (error.config as IErrorReponse).data.message,
+        message:
+          (error.response as IErrorReponse).data.message ||
+          'Wrong password, please try again',
       });
     },
   });

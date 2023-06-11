@@ -16,6 +16,7 @@ export interface IBook {
   published: Date | null;
   numberOfPages: number;
   money: number;
+  image: string;
   createdAt: Date | null;
   updatedAt: Date | null;
 }
@@ -38,6 +39,7 @@ export interface ILogin {
 export interface ISignup {
   name: string;
   email: string;
+  address: string;
   password: string;
   passwordConfirm: string;
 }
@@ -47,6 +49,7 @@ export interface IUser {
   name: string;
   email: string;
   role: string;
+  address: string;
   createdAt: Date | null;
   updatedAt: Date | null;
 }
@@ -89,6 +92,7 @@ export interface ICart {
 
 export interface IOrder extends ICart {
   status: OrderStatus;
+  expectDelivered: Date | null;
 }
 
 export interface ICommentSend {
@@ -99,4 +103,9 @@ export interface ICommentSend {
 
 export interface IStatusSend {
   status: string;
+}
+
+export interface IStripe {
+  amount: number;
+  description: string;
 }
