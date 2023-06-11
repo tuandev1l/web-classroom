@@ -24,7 +24,7 @@ public class SignupDto {
   private String email;
 
   @NotNull(message = "Address must not be null")
-  @Size(min = 2, max = 20, message = "Address must at least 2 characters")
+  @Size(min = 2, message = "Address must at least 2 characters")
   private String address;
 
   @NotNull(message = "Password must not be null")

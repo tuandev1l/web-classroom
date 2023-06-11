@@ -19,18 +19,15 @@ public class BookDto {
   private Long type;
 
   @NotNull(message = "Title must not be null")
-  @Size(min = 2, max = 50, message = "Title at least 2 characters and at most " +
-      "50 characters")
+  @Size(min = 2, message = "Title at least 2 characters and at most 50 characters")
   private String title;
 
   @NotNull(message = "Author must not be null")
-  @Size(min = 2, max = 50, message = "Author at least 2 characters and at most " +
-      "50 characters")
+  @Size(min = 2, message = "Author at least 2 characters and at most 50 characters")
   private String author;
 
   @NotNull(message = "Description must not be null")
-  @Size(min = 2, message = "Author at least 2 characters and at most " +
-      "50 characters")
+  @Size(min = 2, message = "Author at least 2 characters")
   private String description;
 
   @NotNull(message = "Image must not be null")

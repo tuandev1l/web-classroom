@@ -33,16 +33,20 @@ public class CommentService {
     Book book = this.bookService.getBook(id);
     User user = userService.getCurrentUser();
     Item item = itemService.getItem(commentDto.getOrderId(), id);
-    item.setIsCommented(true);
-    Comment comment = new Comment();
-    comment.setUser(user);
-    comment.setBook(book);
-    comment.setRate(commentDto.getRate());
-    comment.setMessage(commentDto.getMessage());
-    this.commentRepository.save(comment);
-    item.setComment(comment);
-    itemService.saveItem(item);
-    return comment;
+    if (!item.getIsCommented()) {
+      item.setIsCommented(true);
+      Comment comment = new Comment();
+      comment.setUser(user);
+      comment.setBook(book);
+      comment.setRate(commentDto.getRate());
+      comment.setMessage(commentDto.getMessage());
+      this.commentRepository.save(comment);
+      item.setComment(comment);
+      itemService.saveItem(item);
+      return comment;
+    }
+    return this.updateComment(book.getId(), item.getComment().getId(),
+        commentDto);
   }
 
   public Comment updateComment(long bookId, long commentId, CommentDto commentDto) {
